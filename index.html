@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML Document Template</title>
+  <style>
+  body{
+      padding:16px;
+      margin:5%;
+      background:white;
+  }
+    p {
+      font-family: Arial, sans-serif;
+    }
+.cios{
+width:5%;
+background:red;
+margin:5px;
+width:100px;
+
+
+}
+#dinputs{
+    font-size:10px;
+  
+}
+#doutputs{
+    font-size:10px;
+      width:45%;   
+}
+#todo{
+    padding:5px;
+}
+#logiceditor{
+    width:95%;
+    height:150px;
+}
+#iodescription{
+  position:absolute;
+  right:5px;
+  top:0%;
+    font-size:12px;
+    margin-left:10px;
+    width: 5% ;
+    height: 100px;
+
+}
+  </style>
+</head>
+<body>
+  <div id="todo">
+    <input id="name" type="text" placeholder="My Logic Circuit"></input>name<br>
+<input id="inputs" type="number" value=8>number of inputs</input></br>
+<input id="outputs" type="number" value=5>number of outputs</input></br>
+<button onclick="setUpio()">Set Up ios</button>
+<div style="border-style:solid;width: 80%;">
+<div id="dinputs"></div>
+<textarea id="logiceditor"></textarea>
+<div id="doutputs"></div>
+</div><div id="iodescription"></div>
+<br>
+<button onclick="procesar()">Process</button>
+</div>
+  <script>
+   function setUpio(v){
+       dinputs.innerHTML="";doutputs.innerHTML=""
+for(var i=0;i<inputs.value;i++){
+dinputs.innerHTML+=`<input type="radio" id="ii`+i+`" class="cios cin" onclick="check(this)" value="off" ></input>i`+i;
+iodescription.innerHTML+="i"+i+"<input type='text' style='width:90%;' placeholder='Desc, value'></input><br>";
+
+}
+
+for(var i=0;i<outputs.value;i++){
+doutputs.innerHTML+=`<input  type="radio" id="oo`+i+`" class="cios cou" style='color:red;' ></input>o`+i;
+iodescription.innerHTML+="o"+i+"<input type='text' style='width:90%;' placeholder='Desc, value'></input>";
+eval("o"+i+"=false;");
+}
+
+
+}
+
+check = function(e){
+ 
+    if(e.value==="on"){ e.checked=false;e.value="off"}
+    else {e.checked=true;e.value="on"}
+    procesar();
+   // logiceditor.value+=e.id+": "+e.checked+" "
+}
+
+function procesar(){
+var ai=document.getElementsByClassName("cin")
+
+for(var i=0;i<ai.length;i++){
+    eval("var i"+i+"="+ai[i].checked);
+}
+
+var ao=document.getElementsByClassName("cou")
+
+for(var i=0;i<ao.length;i++){
+    eval("var o"+i+"="+ao[i].checked);//var 
+}
+
+eval(logiceditor.value);
+for(var i=0;i<ao.length;i++){
+    //eval("var o"+i+"="+ao[i].checked);
+    ao[i].checked=eval("o"+i);
+    
+    
+
+}
+
+}
+
+
+
+
+var linklib="https://raw.githubusercontent.com/ljaureguil/My-Library/refs/heads/master/MyLibmin.js";
+var link="https://api.jsonblob.com/019b80ce-bf27-7775-a066-af7b7869e5cf";//https://api.jsonblob.com/019b5163-39dc-74c4-b292-6655ebb3cf98"
+var GetJson,UpdateJson;
+
+loadDoc = function(url,callback) {
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET", url, false);
+        xhttp.send();
+       if(callback!=undefined) callback(xhttp.responseText);
+        return xhttp.responseText;
+    }
+
+
+obj={},scr=""
+
+
+loadDoc(linklib,function(data){
+  //alert(data)
+  scr=data;
+  eval(data);
+
+  GetJson(link,function(r){
+//area.value=r.cont;
+///
+var fu=UpdateJson;
+//alert(fu)
+UpdateJson=fu;
+//alert(UpdateJson)
+ obj=r;
+
+
+  });
+})
+
+function sendData(){ 
+  eval(scr);
+ //  alert(UpdateJson)
+ obj.cont=area.value;
+
+
+UpdateJson(link,obj,function(r){
+    alert("all done");
+  });
+}
+
+function   readData(){
+
+  GetJson(link,function(r){
+    obj=r;
+  //  area.value=obj.cont;
+  });
+} 
+
+
+
+
+
+
+  </script>
+</body>
+</html>
