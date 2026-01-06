@@ -58,9 +58,16 @@ width:100px;
 <div id="dinputs"></div>
 <textarea id="logiceditor"></textarea>
 <div id="doutputs"></div>
-</div><div id="iodescription"></div>
+</div>
+<div id="iodescription"></div>
 <br>
-<button onclick="procesar()">Process</button><button onclick="sendObj()">Send to Web</button>
+<div id="men">
+<button onclick="procesar()">Process</button>
+<button onclick="sendObj()">Send to Web</button>
+<select id="scirc" oninput="selc(this.value)">
+  <option value="">Select Circuit</option>
+</select>
+</div>
 </div>
   <script>
 
@@ -72,8 +79,12 @@ width:100px;
     //obj.circuit={name:"",inputs:[],outputs:[]};
 
    function setUpio(v){
+    iodescription.innerHTML="";
        dinputs.innerHTML="";doutputs.innerHTML=""
 for(var i=0;i<inputs.value;i++){
+  while(circuito.inputs.length>inputs.value) circuito.inputs.pop();
+  while(circuito.outputs.length>outputs.value) circuito.outputs.pop();
+  
 dinputs.innerHTML+=`<input type="radio" id="ii`+i+`" class="cios cin" onclick="check(this)" value="off" ></input>i`+i;
 iodescription.innerHTML+="i"+i+"<input type='text' style='width:90%;' placeholder='Desc, value'></input><br>";
 var input={};
@@ -175,10 +186,17 @@ var fu=UpdateJson;
 UpdateJson=fu;
 //alert(UpdateJson)
  obj=r;
+ for(var i=0;i<obj.circuits.length;i++){
+   var c=obj.circuits[i];
+   var opt=document.createElement("option");
+   opt.value=c.name;
+   opt.innerHTML=c.name;
+   scirc.appendChild(opt);  
 
 
-  });
+  };
 })
+});
 
 function sendObj(){ 
   eval(scr);
@@ -202,7 +220,29 @@ function   readData(){
   });
 } 
 
+function selc(v){
+  if(v=="") return;
+  var c=obj.circuits.find(c=>c.name==v);
+  if(c==undefined) return;
+  circuito=c;
+  logiceditor.value=circuito.logic;
+  inputs.value=circuito.inputs.length;
+  outputs.value=circuito.outputs.length;
+  setUpio();
 
+ /* for(var i=0;i<circuito.inputs.length;i++){  
+    var ii=document.getElementById("ii"+i);
+    if(ii!=undefined){
+        ii.checked=circuito.inputs[i].value;
+    }
+  }
+  for(var i=0;i<circuito.outputs.length;i++){
+    var oo=document.getElementById("oo"+i);
+    if(oo!=undefined){
+        oo.checked=circuito.outputs[i].value;
+    }
+  }*/
+}
 
 
 
