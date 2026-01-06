@@ -60,14 +60,31 @@ width:100px;
 <div id="doutputs"></div>
 </div><div id="iodescription"></div>
 <br>
-<button onclick="procesar()">Process</button>
+<button onclick="procesar()">Process</button><button onclick="sendObj()">Send to Web</button>
 </div>
   <script>
+
+    var obj={},scr="",circuito={};
+   circuito.name="";
+    circuito.inputs=[];
+    circuito.outputs=[];
+    circuito.logic="";
+    //obj.circuit={name:"",inputs:[],outputs:[]};
+
    function setUpio(v){
        dinputs.innerHTML="";doutputs.innerHTML=""
 for(var i=0;i<inputs.value;i++){
 dinputs.innerHTML+=`<input type="radio" id="ii`+i+`" class="cios cin" onclick="check(this)" value="off" ></input>i`+i;
 iodescription.innerHTML+="i"+i+"<input type='text' style='width:90%;' placeholder='Desc, value'></input><br>";
+var input={};
+input.name="i"+i;
+input.desc="";input.value=false;
+input.connectTo=function(output){
+    if(this.value) output.value=true;
+    else output.value=false;
+}
+circuito.inputs.push(input);
+
 
 }
 
@@ -75,6 +92,16 @@ for(var i=0;i<outputs.value;i++){
 doutputs.innerHTML+=`<input  type="radio" id="oo`+i+`" class="cios cou" style='color:red;' ></input>o`+i;
 iodescription.innerHTML+="o"+i+"<input type='text' style='width:90%;' placeholder='Desc, value'></input>";
 eval("o"+i+"=false;");
+
+var output={};
+output.name="o"+i;
+output.desc="";output.value=false;
+output.connectFrom=function(input){
+    if(input.value) this.value=true;
+    else this.value=false;
+}
+circuito.outputs.push(output);
+
 }
 
 
@@ -95,9 +122,14 @@ for(var i=0;i<ai.length;i++){
     eval("var i"+i+"="+ai[i].checked);
 }
 
-var ao=document.getElementsByClassName("cou")
+var ao=document.getElementsByClassName("cou");
+/*ao.forEach(element => {
+  element.checked=false;
+});
+*/
 
 for(var i=0;i<ao.length;i++){
+ao[i].checked=false;
     eval("var o"+i+"="+ao[i].checked);//var 
 }
 
@@ -105,10 +137,8 @@ eval(logiceditor.value);
 for(var i=0;i<ao.length;i++){
     //eval("var o"+i+"="+ao[i].checked);
     ao[i].checked=eval("o"+i);
-    
-    
-
-}
+    }
+    circuito.logic=logiceditor.value;
 
 }
 
@@ -129,7 +159,7 @@ loadDoc = function(url,callback) {
     }
 
 
-obj={},scr=""
+
 
 
 loadDoc(linklib,function(data){
@@ -141,7 +171,7 @@ loadDoc(linklib,function(data){
 //area.value=r.cont;
 ///
 var fu=UpdateJson;
-//alert(fu)
+//alert(r.name)
 UpdateJson=fu;
 //alert(UpdateJson)
  obj=r;
@@ -150,12 +180,15 @@ UpdateJson=fu;
   });
 })
 
-function sendData(){ 
+function sendObj(){ 
   eval(scr);
  //  alert(UpdateJson)
- obj.cont=area.value;
-
-
+ //obj.cont=area.value;
+ var n=prompt("Name of the circuit",circuito.name);
+  if(n!=null) circuito.name=n;
+  else return;
+  obj.circuits.push(circuito);
+ 
 UpdateJson(link,obj,function(r){
     alert("all done");
   });
@@ -164,7 +197,7 @@ UpdateJson(link,obj,function(r){
 function   readData(){
 
   GetJson(link,function(r){
-    obj=r;
+    obj=r;   
   //  area.value=obj.cont;
   });
 } 
